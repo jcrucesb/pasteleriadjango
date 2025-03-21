@@ -1,0 +1,21 @@
+<!---Esto es lo 1rtro que se debe declara; -->
+<!--./base/base.html; De esta manera hacemos referencia al HTML base que queremos utilizar.-->
+<!--el extends, funcionando correctamente.-->
+{% extends './base usuario sistema/base_sistema.html' %} {% block content %} {% load static %}
+<h1>Página Crear Tareas.</h1>
+<!--Agregamos los mensaje que se mostraran en la vista de los datos.-->
+<div class=" mb-3 p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
+  <h3><p style="color: hsl(120, 97%, 63%);">Ingresar Tortas</p></h3>
+</div>
+<!--Recordar qie si no se pasa ruta o url al action del form, se reciben los datos en la misma 
+página, por ende, en tasks/create_tasks.-->
+<div class="container-sm pl-5">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        {{form_create_product.as_p}}
+          <button type="submit" class="btn btn-success mt-2">ENVIAR</button>
+          <button type="button" class="btn btn-danger mt-2">CANCELAR</button>
+      </form>
+</div>
+
+{% endblock %}

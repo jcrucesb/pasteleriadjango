@@ -1,0 +1,31 @@
+<!---Esto es lo 1rtro que se debe declara; -->
+{% extends 'base usuarios sistema/base_sistema.html' %}
+<!--Debemos agegar este comando en jinja, para que nos carge los estilos.-->
+{% block content %}
+  <div class="formRegistro mt-5 mb-5 ">
+    <form action="" method="POST">
+        {%csrf_token%}
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <label for="nombre" class="form-label mt-2">Usuario</label>
+            <input type="password" id="inputPassword6" class="form-control mt-1" aria-describedby="passwordHelpInline">
+            <label for="nombre" class="form-label mt-2">Password</label>
+            <input type="password" id="inputPassword6" class="form-control mt-1" aria-describedby="passwordHelpInline">
+            <label for="nombre" class="form-label mt-2">E-mail</label>
+            <input type="password" id="inputPassword6" class="form-control mt-1" aria-describedby="passwordHelpInline">
+          </div>
+          <div class="col-lg">
+              <h1 class="text-center mt-4 nerko-one-regular">Registrar Al Sistema</h1>
+              <div class="alert alert-primary mt-4" role="alert">
+                <p class="text-center mt-2"><strong>El usuario quedará registrado en el sistema de ventas. Al momento 
+                  de registrarse, este usuario nuevo podrá insertar productos entre varias otras
+                  opciones más disponibles en el Panel de Usuarios.</strong>
+                </p>
+              </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Registrar</button>
+    </form>
+  </div>
+  <!---->
+{% endblock %}

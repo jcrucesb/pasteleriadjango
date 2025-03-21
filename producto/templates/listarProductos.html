@@ -1,0 +1,388 @@
+<!--./base/base.html; De esta manera hacemos referencia al HTML base que queremos utilizar.-->
+<!--el extends, funcionando correctamente.-->
+{% extends './base/base.html' %} {% block content %} {% load static %}
+<!--Fin Modal Registro.-->
+<div id="carouselExampleCaptions" class="carousel slide">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'img/torta1.jpg' %}" class="" width="100%" height="350">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>First slide label</h5>
+        <p>Some representative placeholder content for the first slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'img/torta2.jpg' %}" class="imagenIndex" width="100%" height="350">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Second slide label</h5>
+        <p>Some representative placeholder content for the second slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'img/torta3.jpg' %}" class="imagenIndex" width="100%" height="350">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Third slide label</h5>
+        <p>Some representative placeholder content for the third slide.</p>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="badge text-bg-info">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="badge text-bg-info">Siguiente</span>
+  </button>
+</div>
+<!---->
+<div class="container-xl text-center mt-5 mb-5">
+  <h2 class="text-center lobster-regular" >Elije tu torta favorita</h2>
+  <div class="resena">
+    <p class="text-center montserrat-300">Todos nuestros productos, están hechos con cariño, amor y además con ingredientes frescos de primera selección,
+    la cuál nos permite entregar un producto de calidad a nuestros distinguidos clientes.</p>
+  </div>
+</div>
+<!---->
+<!---->
+<button
+  type="button"
+  class="btn btn-primary position-relative"
+  value=""
+  data-id=""
+  onclick="valorInput(this)"
+>
+  <img src="{% static 'imgSistema/carritoCompras.png' %}" alt="" /> Carrito
+  <span style="border-width: 1px; border-style: solid;"
+    class="span_count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success"
+  >
+    <input type="number" id="total_producto" name="total_producto" class="text-center" readonly style="border-radius: 50%; width: 30px; height: 30px; border-width: 1px; border-style: solid;"/>
+  </span>
+</button>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="agregar_carrito"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Productos Adquiridos
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="table-responsive">
+        <div class="modal-body">
+          <!--Tabla con Productos.-->
+          <table
+            class="table table-bordered table-primary table-responsive-sm hover tabla_carrito" id="tabla_producto"
+          >
+            <thead>
+              <tr class="table-primary">
+                <th>Id</th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Imagen</th>
+                <th>Cant. Producto</th>
+                <th>Total a Pagar</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody class="tbdoy_product">
+              <!--Crear tr y td con los datos nuevos-->
+              <!--Fin Crear tr y td con los datos nuevos-->
+            </tbody>
+          </table>
+          <!--Fin Tabla con Productos.-->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <input type="number" id="mostrarValor" readonly name="mostrarValor" style="border-radius: 5px;border-color: chocolate;" min="0" value="0" class="text-center">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button type="button" class="btn btn-primary" id="pagar_productos" name="pagar_productos" onclick="pagar(this)">
+          Seleccionar Pago
+        </button>
+        <div class="container-sm" id="div_pago" style="display: none;">
+          <button type="button" value="0" class="btn btn-outline-success" id="debito" onclick="debito(this)" data-bs-toggle="modal" data-bs-target="#myModal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card-2-back" viewBox="0 0 16 16">
+            <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5z"/>
+            <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1m-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1"/>
+          </svg> Debito</button>
+          <button type="button" class="btn btn-outline-success" value="1" id="credit_card" onclick="credito(this)" data-bs-toggle="modal" data-bs-target="#myModal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card-2-front" viewBox="0 0 16 16">
+            <path d="M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
+            <path d="M2 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5"/>
+          </svg> Credito</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Modal Carrito-->
+<!--Fin Modal Carrito.-->
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Datos Boleta</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body debito_final" id="debito_final">
+       <!--Etiquetas P-->
+       <div class="container-sm">
+        <form action="" id="form_pago" method="">
+          {%csrf_token%}
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="nombre_cliente">Nombre: </span>
+            <input type="hidden" class="form-control" id="tipo_pago" name="tipo_pago">
+            <input type="text" class="form-control" id="nombre_cliente" name="nombre_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-color: rgb(196, 69, 235)">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="ap_cliente">Ap. Paterno: </span>
+            <input type="text" class="form-control" id="ap_cliente" name="ap_paterno_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-color: rgb(196, 69, 235)">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="ap_materno_cliente">Ap. Materno: </span>
+            <input type="text" class="form-control" id="ap_materno_cliente" name="ap_materno_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-color: rgb(196, 69, 235)">
+          </div>
+          <div class="input-group mb-3">
+            <select class="form-control" name="region" style="border-color: rgb(196, 69, 235)" id="region" onchange="buscar_ciudad()">
+              <option data-id="0" data-region = "null" value="0" selected="selected">Regiones</option>
+              <option  id="region_15" data-region ="Arica y Parinacota" value="15">Arica y Parinacota</option>
+              <option id="region_1" data-region ="Tarapacá" value="1">Tarapacá</option>
+              <option id="region_2" data-region ="Antofagasta" value="2">Antofagasta</option>
+              <option id="region_3" data-region ="Atacama" value="3">Atacama</option>
+              <option id="region_4" data-region ="Coquimbo" value="4">Coquimbo</option>
+              <option id="region_5" data-region ="Valparaiso" value="5">Valparaiso</option>
+              <option id="region_13" data-region ="Metropolitana" value="13">Metropolitana</option>
+              <option id="region_6" data-region ="O'Higgins" value="6">O'Higgins</option>
+              <option id="region_7" data-region ="Maule" value="7">Maule</option>
+              <option id="region_16" data-region ="Ñuble" value="16">Ñuble</option>
+              <option id="region_8" data-region ="Bio - Bio" value="8">Bio - Bio</option>
+              <option id="region_9" data-region ="Araucania" value="9">Araucania</option>
+              <option id="region_14" data-region ="Los Rios" value="14">Los Rios</option>
+              <option id="region_10" data-region ="Los Lagos" value="10">Los Lagos</option>
+              <option id="region_11" data-region ="Aisen" value="11">Aisen</option>
+              <option id="region_12" data-region ="Magallanes Y Antártica" value="12">Magallanes Y Antartica</option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <select class="form-control" style="border-color: rgb(196, 69, 235)" name="comuna" id="comuna">
+              <option value="0">Comunas por Region</option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="direccion_cliente">Dirección: </span>
+            <input type="text" class="form-control" id="direccion_cliente" name="direccion_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"style="border-color: rgb(196, 69, 235)">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="telefono">Teléfono: </span>
+            <input type="text" class="form-control" id="telefono" name="telefono" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"style="border-color: rgb(196, 69, 235)">
+          </div>
+          <label for="">Lugar de Entrega: </label>
+          <div class="btn-group mb-1" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="tipo_propiedad" id="casa_cliente" value="Casa" autocomplete="off">
+            <label class="btn btn-outline-primary" for="casa_cliente">Casa</label>
+          
+            <input type="radio" class="btn-check" name="tipo_propiedad" id="departamento_cliente" value="Departamento" autocomplete="off">
+            <label class="btn btn-outline-primary" for="departamento_cliente">Departamento</label>
+          
+            <input type="radio" class="btn-check" name="tipo_propiedad" id="condominio_cliente" value="Condominio" autocomplete="off">
+            <label class="btn btn-outline-primary" for="condominio_cliente">Condominio</label>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="email_cliente">E-Mail: </span>
+            <input type="text" class="form-control" id="email_cliente" name="email_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-color: rgb(196, 69, 235)">
+          </div>
+          <div class="alert alert-primary text-center" id="div_pagar" role="alert"></div>
+          <div id="credit" style="display: none;">
+            <div class="row mt-2">
+              <div class="col">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" style="border-color: #0a0a0a;" name="cuota" id="cuota_3" value="3">
+                  <label class="form-check-label" for="cuota_3">
+                    <span class="badge text-bg-warning">3 Cuotas Precio Contado</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" style="border-color: #0a0a0a;" name="cuota" id="cuota_6" value="6">
+                  <label class="form-check-label" for="cuota_6">
+                    <span class="badge text-bg-warning">6 Cuotas</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" style="border-color: #0a0a0a;" name="cuota" id="cuota_9" value="9">
+                    <label class="form-check-label pl-2" for="cuota_9">
+                      <span class="badge text-bg-warning">9 Cuotas</span>
+                    </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="#" class="alert-link"><p class="text-center" style="background-color: rgb(48, 236, 142);">Registrate Aquí Para Recibir Descuentos</p></a>
+          <div class="alert alert-danger text-center" role="alert">
+            La Boleta de compra, se enviará por correo.
+          </div>
+        </form>
+       </div>
+        <!--Fin etiquetas P.-->
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <button type="button" onclick="pagar_final(this)" class="btn btn-success" data-bs-dismiss="modal">Realizar Pago</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!----------------------------------------------------------------------------------------------------------->
+
+<div class="container-xl text-center ml-5">
+  <div class="container-fluid d-flex justify-content-center mt-2">
+    <div class="col-md-6">
+      <div class="d-flex" role="search" >
+        <input class="form-control me-2" type="text" id="input_busqueda_producto" placeholder="Search" aria-label="Search">
+        <button class="btn" style="background: #9fa0a3;" onclick="busqueda(this)" type="button"><i class="fa-solid fa-magnifying-glass" style="color: #043eec;"></i></button>
+        <button class="btn" style="background: #f04750;" onclick="cancelar_busqueda(this)" type="button"><i class="fa-solid fa-ban"></i></button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    {% for producto in productos %}
+    <div class="col-xs-12 col-sm-4 mt-3 producto_busqueda" data-nombre_producto_busqueda="{{producto.nombreProducto}}">
+        <div class="card" style="border-color: #ac67fc; border-width: 2px;">
+          <div class="card-body">
+            <h5 class="card-title calistoga-regular">{{producto.nombreProducto}}</h5>
+            <!--Esta es la manera de recorrer un for con diferentesimágenes. {% static 'imgProductos/' %}{{ img }}-->
+            <img style="border: 2px solid #0a0a0a;"
+              src="{% static '' %}{{producto.ruta_img_1}}"
+              class="imm card-img-top"
+              width="200 px"
+              height="200 px"
+              alt="..."
+              data-im="{{producto.ruta_img_1}},{{producto.ruta_img_2}},{{producto.ruta_img_3}}"
+              id="imagen1_{{producto.id}}"
+            />
+            <p class="card-text mt-2 montserrat-300">{{producto.detalle_producto}}</p>
+            <p class="mt-2 montserrat-300" data-id_prod_pag_principal="{{producto.id}}" data-precioProdPagPrincipal="{{producto.precioProd}}">Precio: ${{producto.precioProd}} clp</p>
+            <p class="mt-2 montserrat-300" data-id_prod_pag_principal="{{producto.id}}" data-cantidadProdPagPrincipal="{{producto.cantProdDisponible}}">
+              Cant Disponibles: {{producto.cantProdDisponible}}
+            </p>
+            <button
+              type="button"
+              style="background: #70ade7; border-color: aqua;"
+              class="btn"
+              onclick="datos('{{producto.id}}', '{{producto.nombreProducto}}', '{{producto.ruta_img_1}}', '{{producto.precioProd}}', '{{producto.detalle_producto}}', '{{producto.cantProdDisponible}}')"
+              data-bs-toggle="modal"
+              data-bs-target="#prueba"
+              >
+              Ver +
+            </button>
+          </div>
+        </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<!----------------------------------------------------------------------------------------------------------->
+<!--FIN MODAL PRODUCTOS-->
+<!--MODAL PRODUCTOS-->
+<div
+  class="modal fade"
+  id="prueba"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title  w-100 text-center"><p class="text-center sevillana-regular" id="producto_title"></p></h5>
+      </div>
+      <div class="modal-body" style="background: #fc9fd8;">
+        <div class="card-body">
+          <!--Carrousel de Fotos.-->
+        <div id="carouselExample" class="carousel slide">
+          <div class="carousel-inner">
+            <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExample"
+            data-bs-slide="prev"
+          >
+          <i class="fa-solid fa-circle-chevron-left" style="color:  #0c0c0b;"></i>
+          </button>
+            <div class="carousel-item active img_1"></div>
+            <div class="carousel-item img_2"></div>
+            <div class="carousel-item img_3"></div>
+            <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExample"
+            data-bs-slide="next"
+          >
+          <i class="fa-solid fa-circle-chevron-right" style="color: #0c0c0b;"></i>
+          </button>
+          </div>
+          </div>
+          <div class="alert alert-warning mt-3" role="alert">
+            <p class="text-center sevillana-regular card-text" style="color: #0a0a0a;" id="detalle_detalle"></p>
+          </div>
+          <div class="alert alert-warning mt-1" role="alert">
+            <p class="text-center sevillana-regular" style="color: #0a0a0a;" id="detalle_precio"></p>
+          </div>
+          <div class="alert alert-warning mt-1" role="alert">
+            <p class="text-center sevillana-regular" style="color: #0a0a0a;" id="detalle_cantidad"></p>
+          </div>
+          
+          
+        <!--Fin Carrousel de Fotos.-->
+        <div class="img_img_modal"></div>
+        <p></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="d-grid gap-2 col-6 mx-auto"">
+          <!--Botón modal Carrito de Compras.-->
+          <button
+          type="button"
+          class="btn_modal_carrito btn"
+          style="background: #ac67fc;"
+          data-id=""
+          id="agregar_carro"
+          onclick="agregarCarro(this)"
+          >
+            <p class="text-center sevillana-regular">+ Carrito</p>
+          </button>
+          <!--Fin Botón modal Carrito de Compras.-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

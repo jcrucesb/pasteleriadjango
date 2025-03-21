@@ -1,0 +1,96 @@
+<!---Esto es lo 1rtro que se debe declara; -->
+{% extends 'base/base.html' %}
+{% block content %}
+<!--Agregamos los mensaje que se mostraran en la vista de los datos.-->
+<div class="container-sm text-center mt-2">
+  <div class="alert alert-primary" role="alert">
+    <h3>Registrate</h3>
+  </div>
+</div>
+<div class="container-sm text-center" style="background: rgb(198, 228, 159);">
+  <form action="" id="registro_usuario">
+    {%csrf_token%}
+        <div class="input-group mb-3 mt-1">
+          <span class="input-group-text">Nombre: </span>
+          <input type="text" class="form-control" id="register_nombre_cliente" name="register_nombre_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-color: rgb(196, 69, 235)">
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text">Ap. Paterno: </span>
+          <input type="text" class="form-control" id="register_ap_cliente" name="register_ap_paterno_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-color: rgb(196, 69, 235)">
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" >Ap. Materno: </span>
+          <input type="text" class="form-control" id="register_ap_materno_cliente" name="register_ap_materno_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-color: rgb(196, 69, 235)">
+        </div>
+        <div class="input-group mb-3">
+          <select class="form-control" name="region" style="border-color: rgb(196, 69, 235)" id="region" onchange="buscar_ciudad()">
+            <option data-id="0" data-region = "null" value="0" selected="selected">Regiones</option>
+            <option  id="region_15" data-region ="Arica y Parinacota" value="15">Arica y Parinacota</option>
+            <option id="region_1" data-region ="Tarapacá" value="1">Tarapacá</option>
+            <option id="region_2" data-region ="Antofagasta" value="2">Antofagasta</option>
+            <option id="region_3" data-region ="Atacama" value="3">Atacama</option>
+            <option id="region_4" data-region ="Coquimbo" value="4">Coquimbo</option>
+            <option id="region_5" data-region ="Valparaiso" value="5">Valparaiso</option>
+            <option id="region_13" data-region ="Metropolitana" value="13">Metropolitana</option>
+            <option id="region_6" data-region ="O'Higgins" value="6">O'Higgins</option>
+            <option id="region_7" data-region ="Maule" value="7">Maule</option>
+            <option id="region_16" data-region ="Ñuble" value="16">Ñuble</option>
+            <option id="region_8" data-region ="Bio - Bio" value="8">Bio - Bio</option>
+            <option id="region_9" data-region ="Araucania" value="9">Araucania</option>
+            <option id="region_14" data-region ="Los Rios" value="14">Los Rios</option>
+            <option id="region_10" data-region ="Los Lagos" value="10">Los Lagos</option>
+            <option id="region_11" data-region ="Aisen" value="11">Aisen</option>
+            <option id="region_12" data-region ="Magallanes Y Antártica" value="12">Magallanes Y Antartica</option>
+          </select>
+        </div>
+        <div class="input-group mb-3">
+          <select class="form-control" style="border-color: rgb(196, 69, 235)" name="comuna" id="comuna">
+            <option value="0">Comunas por Region</option>
+          </select>
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" >Dirección: </span>
+          <input type="text" class="form-control" id="register_direccion_cliente" name="register_direccion_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"style="border-color: rgb(196, 69, 235)">
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" >Teléfono: </span>
+          <input type="number" class="form-control" id="register_telefono" name="register_telefono" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"style="border-color: rgb(196, 69, 235)">
+        </div>
+        <label for="">Lugar de Entrega: </label>
+        <div class="btn-group mb-1" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" name="register_tipo_propiedad" id="register_casa_cliente" value="Casa" autocomplete="off">
+          <label class="btn btn-outline-primary" for="register_casa_cliente">Casa</label>
+        
+          <input type="radio" class="btn-check" name="register_tipo_propiedad" id="register_departamento_cliente" value="Departamento" autocomplete="off">
+          <label class="btn btn-outline-primary" for="register_departamento_cliente">Departamento</label>
+        
+          <input type="radio" class="btn-check" name="register_tipo_propiedad" id="register_condominio_cliente" value="Condominio" autocomplete="off">
+          <label class="btn btn-outline-primary" for="register_condominio_cliente">Condominio</label>
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="register_email_cliente">E-Mail: </span>
+          <input type="text" class="form-control" id="register_email_cliente" name="register_email_cliente" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-color: rgb(196, 69, 235)">
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text">Nombre Usuario: </span>
+          <input type="text" class="form-control" id="register_name_user" name="register_name_user" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"style="border-color: rgb(196, 69, 235)">
+        </div>
+        <div class="alert alert-warning" role="alert">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Password:1 </span>
+            <input type="password" class="form-control" id="password_1" name="password_1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"style="border-color: rgb(196, 69, 235)">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text"> Vuelva a Ingresar Password </span>
+            <input type="password" class="form-control" id="password_2" name="password_2" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"style="border-color: rgb(196, 69, 235)">
+          </div>
+          La password debe tener almenos 8 carácteres, contener números y letras de diferentes expresiones.
+        </div>
+        
+    <div class="mt-2">
+      <button type="button" onclick="registrar_cliente(this)" class="btn btn-success mt-2">REGISTRARME</button>
+      <button type="button" class="btn btn-danger mt-2">CANCELAR</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

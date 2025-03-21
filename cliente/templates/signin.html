@@ -1,0 +1,24 @@
+<!---Esto es lo 1rtro que se debe declara; -->
+{% extends 'base/base.html' %}
+{% block content %}
+<!--Agregamos los mensaje que se mostraran en la vista de los datos.-->
+<div class="container-sm text-center mt-2">
+  <div class="alert alert-primary" role="alert">
+    <h3>Registrate</h3>
+  </div>
+</div>
+<div class="container-sm text-center mt-3">
+    {{error}}
+  <div class="alert alert-primary" role="alert">
+    <form action="" method="POST">
+      {%csrf_token%}
+      {{form}}
+      <!--{{autenticar.as_p}}-->
+      <div class="mt-2">
+        <button type="submit" class="btn btn-success mt-2">INICIAR</button>
+        <button type="button" class="btn btn-danger mt-2">CANCELAR</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Email Demo</title>
+    {% load static %}
+    <!--Cargamos el CSS, el archivo style.css.-->
+    <!-- <link rel="stylesheet" href="{% static 'css/template_correo_compra.css' %}" /> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container mx-auto" style="background: rgb(16, 250, 133);">
+      <h1 class="text-center"><p class="text-center" style="color: white;">!Felicidades por tu Compra!</p></h1>
+      <table class="table table-bordered border-primary" style="background: rgb(245, 245, 245); border-color: black;">
+        <thead style="border-color: black;">
+            <tr style="border-color: rgb(70, 73, 73);">
+                <th class="text-center" style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Nombre Cliente</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Teléfono Contacto</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">E-mail</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Región</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Comuna</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Dirección</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);"> Lugar de Entrega</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);"> Total a Pagar</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);"> Tipo Pago</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);"> Cod. Compra</p></th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: whitrgb(14, 13, 13)e;">{{guardar_datos.nombre_panel_cliente }} {{guardar_datos.ap_paterno_panel_cliente }} {{guardar_datos.ap_materno_panel_cliente }}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">{{guardar_datos.panel_cliente_telefono}}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">{{guardar_datos.email_panel_cliente}}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">{{guardar_datos.cliente_panel_region}}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">{{guardar_datos.cliente_panel_comuna}}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">{{guardar_datos.direccion_panel_cliente}}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">{{guardar_datos.panel_cliente_tipo_propiedad}}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">${{guardar_datos.monto_total}} clp</p></td>
+            <!--Tipo de Pago-->
+            {% if guardar_datos.tipo_pago_panel_cliente == '0' %}
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Débito</p></td>
+            {% else %}
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Crédito</p></td>
+            {% endif %}
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">{{guardar_datos.cod_venta}}</p></td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tabla para MOSTRAR LOS PRODUCTOS OBTENIDO POR EL CLIENTE.-->
+      <table class="table table-bordered border-primary" style="background: rgb(245, 245, 245); border-color: black;">
+        <thead style="border-color: black;">
+            <tr style="border-color: rgb(70, 73, 73);">
+                <th class="text-center" style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">ID</p></th>
+                <th class="text-center" style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Producto</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Cantidad</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Total</p></th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for datos in datos_compra %}
+          <tr>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: whitrgb(14, 13, 13)e;">{{datos.prod_cl }}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: whitrgb(14, 13, 13)e;">{{datos.nombre_prod }}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: whitrgb(14, 13, 13)e;">{{datos.ver }}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">${{datos.total}}</p></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <!---->
+      <!--Tabla para MOSTRAR LOS PRODUCTOS OBTENIDO POR EL CLIENTE.-->
+      <table class="table table-bordered border-primary" style="background: rgb(245, 245, 245); border-color: black;">
+        <thead style="border-color: black;">
+            <tr style="border-color: rgb(70, 73, 73);">
+                <th class="text-center" style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Monto Total</p></th>
+                <th class="text-center" style="background:rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">N° Cuotas</p></th>
+                <th class="text-center" style="background: rgb(198, 162, 231);"><p class="text-center" style="color: rgb(14, 13, 13);">Monto Cuota</p></th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for datos in cuota_cliente %}
+          <tr>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: whitrgb(14, 13, 13)e;">${{datos.monto_total }}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: whitrgb(14, 13, 13)e;">{{datos.cantidad_cuotas }}</p></td>
+            <td style="background:rgb(198, 162, 231);"><p class="text-center" style="color: whitrgb(14, 13, 13)e;">${{datos.monto_cuota }}</p></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <!---->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" ></script>
+</body>
+</html>

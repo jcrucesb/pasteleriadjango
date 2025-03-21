@@ -1,0 +1,124 @@
+body {
+    height: 200px;
+    background-color: red; /* For browsers that do not support gradients */
+    background-image: linear-gradient(to right, rgb(245, 201, 247),rgb(234, 150, 241),rgb(212, 156, 235),rgb(233, 174, 245),rgb(192, 127, 235),rgb(203, 145, 245),violet);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+/*Letra Página principal de productos clientes sin REGISTRAR.*/
+.lobster-regular {
+    font-family: "Lobster", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+.calistoga-regular {
+font-family: "Calistoga", serif;
+font-weight: 400;
+font-style: normal;
+}
+.montserrat-300 {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+}
+.resena{
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box; /* Incluye borde y relleno en el cálculo del tamaño */
+    padding: 20px; /* Relleno */
+    border: 1px solid white; /* Borde */
+    overflow: auto; /* Añade barras de desplazamiento si es necesario */
+    word-wrap: break-word; /* Permite que el texto se ajuste en varias líneas */
+    white-space: normal; /* Permite que el texto se ajuste en varias líneas */
+
+}
+  /*DIV CON IMAGEN INDEX.*/
+.container {
+    display: flex;
+    width: 100%;
+    height: 500px; /* Ajusta el alto según tus necesidades */
+}
+
+.imagen {
+    width: 50%;
+    background-size: cover;
+    background-position: center;
+    border: 5px solid rgb(15, 238, 63);
+}
+
+.imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.amor_trabajo{
+    flex: 1; /* Para que el texto ocupe el espacio restante */
+}
+.texto {
+    width: 50%;
+    padding: 20px;
+    background-color: #f0f0f0; /* Fondo gris claro para el texto */
+}
+/*FIN DIV CON IMAGEN INDEX*/
+/*Diseño CARD PRODUCTOS*/
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+  
+.card {
+max-width: 100%;
+}
+/*Estilo del la eqtieuta p modal del detalle del producto.*/
+#detalle_detalle {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+/**/
+/*FIN DISEÑO CARD PRODUCTOS*/
+/*DISEÑO FORM REGISTRO*/
+.formRegistro{
+    padding: 5px;
+    border: 5px solid rgb(37, 114, 230);
+}
+/*FIN DISEÑO FORM REGISTRO*/
+/*INDEX.HTML*/
+.centrado {
+    margin: 0 auto;
+    width: 50%; /* Ajusta el ancho según sea necesario */
+}
+/*FIN INDEX.HTML*/
+/*Letras*/
+.nerko-one-regular {
+    font-family: "Nerko One", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }  
+/*Fin Letras*/
+/*Fon para los Modals*/
+.sevillana-regular {
+    font-family: "Sevillana", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+/**/
+/*FOOTER IMG*/
+.footer_img{
+    border-radius:50%;
+}
+/*FIN FOOTER IMG*/
+/*FOOTER*/
+#footer {
+    margin-top: auto;
+    position: static;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: table;
+}
+/*FIN FOOTER*/

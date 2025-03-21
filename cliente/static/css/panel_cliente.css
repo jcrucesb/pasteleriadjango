@@ -1,0 +1,15 @@
+.opcion_panel_cliente{
+    border-radius: 10%;
+}
+.footer_img{
+    border-radius:50%;
+}
+/*FOOTER*/
+#footer {
+    margin-top: auto;
+    position: static;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: table;
+}

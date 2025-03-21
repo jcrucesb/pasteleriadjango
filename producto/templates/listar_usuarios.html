@@ -1,0 +1,704 @@
+<!---Esto es lo 1rtro que se debe declara; -->
+<!--./base/base.html; De esta manera hacemos referencia al HTML base que queremos utilizar.-->
+<!--el extends, funcionando correctamente.-->
+{% extends 'base usuario sistema/base_sistema.html' %} {% block content %} {% load static %}
+<!--Recordar qie si no se pasa ruta o url al action del form, se reciben los datos en la misma 
+página, por ende, en tasks/create_tasks.-->
+<div class="container-sm pl-5 mt-5 text-center">
+    <h1 class="mb-2">Panel Usuarios Control Sistema</h1>
+    <h3 class="text-center" style="background-color: #32a9ce;">Bienvenid@ {{ user.first_name }} {{ user.last_name }}</h3>
+    <!--Agregamos los mensaje que se mostraran en la vista de los datos.-->
+    <div class="mb-3 p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 text-center">
+        <h3><p style="color: hsl(120, 97%, 63%);">En este Panel, encontrarás todos los servi
+          cios disponibles que tenemos. {{ user.username }}!
+        </p></h3>
+    </div>
+</div>
+    <div class="d-grid gap-2 col-6 mx-auto mt-2">
+        <button class="btn" onclick="listarUsuarios(this)" style="background: #923ee0; color: aliceblue;" type="button">Cliente Sistema</button>
+    </div>
+    <!-- Modal Usuarios Clientes.-->
+    <div class="modal fade" id="listar_usuarios_cliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background: #923ee0; color: aliceblue;">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Usuarios Cliente Sistema</h1>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table id="cliente_datos" class="table table-striped table-bordered dt-responsive nowrap">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Día Registro</th>
+                        <th>Último Login</th>
+                        <th>Administrador</th>
+                        <th>Activo</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grupo in grupos %}
+                    <tr>
+                        <td>{{grupo.id}}</td>
+                        <td>{{grupo.email}}</td>
+                        <td>{{grupo.username}}</td>
+                        <td>{{grupo.date_joined}}</td>
+                        <td>{{grupo.last_login}}</td>
+                        {% if grupo.is_staff == 1 %}
+                        <td>Administrador</td>
+                        {% else %}
+                        <td>Usuario Sistema</td>
+                        {% endif %}
+                        {% if grupo.is_active == 1 %}
+                        <td>Activo</td>
+                        {% else %}
+                        <td>Inactivo</td>
+                        {% endif %}
+                        {% if grupo.is_staff != 1 %}
+                        <td>
+                          <!-- Botones de acciones -->
+                          <button class="btn btn-sm btn-warning" onclick="bloquearUsuarioCliente('{{grupo.id}}')"><i class="fa-solid fa-user-slash"></i></button>
+                          <button class="btn btn-sm btn-danger" onclick="eliminarUsuarioCliente('{{grupo.id}}', '{{grupo.username}}')"><i class="fa-solid fa-user-xmark"></i></button>
+                          <button class="btn btn-sm btn-success" onclick="descuentos('{{grupo.id}}', '{{grupo.username}}', '{{grupo.email}}')"><i class="fa-solid fa-circle-dollar-to-slot"></i></button>
+                        </td>
+                        {% else %}
+                        <td>
+                          <div class="alert alert-warning text-center" role="alert">
+                            Sin Acción
+                          </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer" style="background: #923ee0; color: aliceblue;" >
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Fin Tablka Usuarios Clientes.-->
+    <!--Modal para mostrar los descuentos disponibles y seleccionar al usuario cliente que lo puede utilizar-->
+    <!-- Modal -->
+    <div class="modal fade" id="modal_descuento_cliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Descuentos Clientes</h1>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <div class="table-responsive">
+                <!--Tabla con Productos.-->
+                <table
+                  class="table table-bordered table-primary table-responsive-sm hover" id="tabla_aplicar_descuento_cliente"
+                >
+                <!-- <thead>
+                  <tr class="table-primary">
+                    
+                  </tr>
+                </thead>
+                <tbody class="tbdoy_product">
+                  Crear tr y td con los datos nuevos
+                  Fin Crear tr y td con los datos nuevos
+                </tbody> -->
+                </table>
+                <!--Fin Tabla con Productos.-->
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Fin Modal mostrar Descuento.-->
+    <!--Botón para mostrar a los usuarios del sistema NO clientes.-->
+    <div class="d-grid gap-2 col-6 mx-auto mt-2">
+      <button class="btn" onclick="listarUsuariosSistema(this)" style="background: #e03eb8; color: aliceblue;" type="button">Usuarios Sistema</button>
+    </div>
+    <!-- Modal Usuarios Solo Sistema.-->
+    <div class="modal fade" id="listar_usuarios_sistema" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background: #e03eb8;">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Usuarios Sistema</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table id="usuario_datos" class="table table-striped table-bordered dt-responsive nowrap">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Día Registro</th>
+                        <th>Último Login</th>
+                        <th>Tipo Usuario</th>
+                        <th>Activo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{user.id}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.username}}</td>
+                        <td>{{user.date_joined}}</td>
+                        <td>{{user.last_login}}</td>
+                        {% if user.is_staff == 1 %}
+                        <td>Administrador</td>
+                        {% else %}
+                        <td>Usuario Sistema</td>
+                        {% endif %}
+                        {% if user.is_active == 1 %}
+                        <td>Activo</td>
+                        {% else %}
+                        <td>Inactivo</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer" style="background: #e03eb8;">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Fin Tablka Usuarios Clientes.-->
+  <div class="d-grid gap-2 col-6 mx-auto mt-2">
+    <button class="btn" onclick="formEditarUser(this)" style="background: #2159f5; color: whitesmoke;">Mis Datos</button>
+  </div>
+  <!-- Modal Para editar los datos del Usuario del Sistema.-->
+  <div class="modal fade" id="edit_user_sys" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #3e5ce0;">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Información</h1>
+        </div>
+        <div class="container">
+          <div class="table-responsive">
+            <table id="datos_user_system_panel" class="table table-striped" style="width:100%">
+              <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tbody_user_system_panel">
+                <tr>
+                    <td>{{user.id}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.username}}</td>
+                    <td><button type="button" class="btn btn-warning" data-bs-target="#staticBackdrop" onclick="envioForm('{{user.id}}', '{{user.email}}', '{{user.username}}')"><i class="fa-solid fa-user-pen" style="color: #4a4b47;"></i></button></td>
+                </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="modal_usuario_edit_sistem_panel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #c1cae4;">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Mis Datos</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <form action="" method="POST">
+              <div class="modal-body" style="background: #94b3ec;">
+                <div class="row g-3 align-items-center mt-1">
+                  <div class="col-auto">
+                    <label for="inputEmail" class="col-form-label">Email</label>
+                  </div>
+                  <div class="col-auto">
+                    <input type="email" id="inputEmail" name="inputEmail" class="form-control" aria-describedby="passwordHelpInline" style="border-color: aqua;" value="{{user.email}}">
+                  </div>
+                </div>
+                <div class="row g-3 align-items-center mt-1">
+                  <div class="col-auto">
+                    <label for="inputUsername" class="col-form-label">Username</label>
+                  </div>
+                  <div class="col-auto">
+                    <input type="text" id="inputUsername" name="inputUsername" class="form-control" aria-describedby="passwordHelpInline" style="border-color: aqua;" value="{{user.username}}">
+                  </div>
+                </div>
+                <div class="row g-3 align-items-center mt-1">
+                  <div class="col-auto">
+                    <label for="inputPassword" class="col-form-label">Password</label>
+                  </div>
+                  <div class="col-auto">
+                    <input type="password" id="inputPassword" name="inputPassword" class="form-control" aria-describedby="passwordHelpInline" style="border-color: aqua;" value="">
+                  </div>
+                </div>
+                <div class="alert alert-warning mt-3" role="alert">
+                  <i class="fa-solid fa-triangle-exclamation"></i> Recuerda que NO puedes dejar capos vacíos.
+                </div>
+              </div>
+              <div class="modal-footer" style="background: #3e5ce0;">
+                <div class="d-grid gap-2 col-6 mx-auto">
+                  <button type="button" class="btn" onclick="enviar_datos_edit_user_system('{{user.id}}')" style="background: #36e4be; color: rgb(17, 14, 14);">Guardar Cambios</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer" style="background: #c1cae4;">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!---->
+  <!--Modal Para Listar todas las compras de los clientes.-->
+  <div class="d-grid gap-2 col-6 mx-auto mt-2">
+    <button class="btn" onclick="abrir_modal_listar_compras(this)" style="background: #cec2bc; color: rgb(22, 20, 20); border-color: #eb1303;">Compras Realizadas</button>
+  </div>
+  <!-- Modal Listar Compras. -->
+  <div class="modal fade" id="listar_compra" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #cec2bc; color: rgb(22, 20, 20); border-color: #eb1303;">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Compras Realizadas</h1>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="table-responsive">
+              <!--Tabla con Productos.-->
+              <table
+                class="table table-bordered table-primary table-responsive-sm hover tabla_carrito" id="tabla_compra"
+              >
+              <!-- <thead>
+                <tr class="table-primary">
+                  
+                </tr>
+              </thead>
+              <tbody class="tbdoy_product">
+                <!--Crear tr y td con los datos nuevos
+                <!--Fin Crear tr y td con los datos nuevos
+              </tbody> -->
+              </table>
+              <!--Fin Tabla con Productos.-->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="background: #cec2bc; color: rgb(22, 20, 20); border-color: #eb1303;">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Fin modal Listar Compras Clientes Panel Uasuario del Sistema.-->
+  <!--Total de Compras Realzadas.-->
+  <div class="d-grid gap-2 col-6 mx-auto mt-2">
+    <button class="btn" onclick="abrir_modal_total_compras(this)" style="background: #df2850; color: white; border-color: #eb1303;">Total Compras Realizadas Débito</button>
+  </div>
+  <!-- Modal Listar Compras. -->
+  <div class="modal fade" id="listar_compras_total" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #df2850; color: rgb(22, 20, 20); border-color: #eb1303;">
+          <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;"">Total Compras Realizadas Con Débito</h1>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="table-responsive">
+              <!--Tabla con Productos.-->
+              <table
+                class="table table-bordered table-primary table-responsive-sm hover tabla_carrito" id="tabla_compras_realizadas_totales"
+              >
+              <!-- <thead>
+                <tr class="table-primary">
+                  
+                </tr>
+              </thead>
+              <tbody class="tbdoy_product">
+                <!--Crear tr y td con los datos nuevos
+                <!--Fin Crear tr y td con los datos nuevos
+              </tbody> -->
+              </table>
+              <!--Fin Tabla con Productos.-->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer footer-xl" style="background: #df2850; color: rgb(22, 20, 20); border-color: #eb1303;">
+          <div class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Fin modal Listar Compras Clientes Panel Uasuario del Sistema.-->
+  <!--Listar Compras Clientes Crédito-->
+  <div class="d-grid gap-2 col-6 mx-auto mt-2">
+    <button class="btn" onclick="abrir_modal_total_compras_credito(this)" style="background: #4d494a; color: white; border-color: #eb1303;">Total Compras Realizadas Crédito</button>
+  </div>
+  <!-- Modal Listar Compras. -->
+  <div class="modal fade" id="listar_compras_total_credito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #4d494a; color: rgb(22, 20, 20); border-color: #eb1303;">
+          <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;"">Total Compras Realizadas Con Débito</h1>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="table-responsive">
+              <!--Tabla con Productos.-->
+              <table
+                class="table table-bordered table-primary table-responsive-sm hover tabla_carrito" id="tabla_compras_realizadas_totales_credito"
+              >
+              <!-- <thead>
+                <tr class="table-primary">
+                  
+                </tr>
+              </thead>
+              <tbody class="tbdoy_product">
+                <!--Crear tr y td con los datos nuevos
+                <!--Fin Crear tr y td con los datos nuevos
+              </tbody> -->
+              </table>
+              <!--Fin Tabla con Productos.-->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer footer-xl" style="background: #4d494a; color: rgb(22, 20, 20); border-color: #eb1303;">
+          <div class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Fin Compras Cliente Crédito.-->
+  <!--Fin Total Compras Realizadas.-->
+  <!--Botón para crear Ofertas a los Clientes que son Usuarios del Sistema.-->
+  <div class="d-grid gap-2 col-6 mx-auto mt-2">
+    <button class="btn" onclick="abrir_modal_descuento(this)" style="background: #f1803f; color: rgb(22, 20, 20);">Crear Descuentos</button>
+  </div>
+  <!-- Modal Ofertas. -->
+  <div class="modal fade" id="crear_oferta_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #f1803f; color: rgb(22, 20, 20);">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Descuentos</h1>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <button type="button" onclick="abrir_modal_insertar(this)"abrir class="btn btn-success mb-2"><i class="fa-solid fa-percent"></i> Crear Descuento</button>
+            <div class="table-responsive">
+              <!--Tabla con Productos.-->
+              <table
+                class="table table-bordered table-primary table-responsive-sm hover tabla_carrito" id="tabla_oferta"
+              >
+              <!-- <thead>
+                <tr class="table-primary">
+                  
+                </tr>
+              </thead>
+              <tbody class="tbdoy_product">
+                <!--Crear tr y td con los datos nuevos
+                <!--Fin Crear tr y td con los datos nuevos
+              </tbody> -->
+              </table>
+              <!--Fin Tabla con Productos.-->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="background: #f1803f; color: rgb(22, 20, 20);">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Modal Insertar Descuentos-->
+  <div class="modal fade" id="formulario_insertar_oferta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #f1803f;">
+          <h1 class="modal-title fs-5" style="color: #fcf9f7;" id="exampleModalLabel">Crear Descuento</h1>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" id="form_desc">
+            <div class="alert alert-info" role="alert">
+              ** Recuerda que el descuento es en porcentaje, "%" **
+            </div>
+            <div class="col-auto">
+              <label for="descuento" class="text-center">Descuento %</label>
+              <input type="number"  class="form-control" name="descuento" id="descuento" step="0" min="0" pattern="^[0-9]+" placeholder="0" style="border-color: #46f0b7;">
+            </div>
+            <div class="col-auto">
+              <label for="cod_descuento" class="text-center">Código Descuento</label>
+              <input type="text" class="form-control" id="cod_descuento" name="cod_descuento" style="border-color: #46f0b7;">
+            </div>
+            <div class="col-auto">
+              <label for="fecha_termino" class="text-center">Fecha Término Descuento</label>
+              <input type="date"  class="form-control" name="fecha_termino" id="fecha_termino" style="border-color: #46f0b7;">
+            </div>
+            <div class="mb-3">
+              <label for="detalle" class="form-label">Detalles</label>
+              <textarea class="form-control" id="detalle" name="detalle" rows="3" style="border-color: #46f0b7;"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer" style="background: #f1803f; color: rgb(22, 20, 20);">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" onclick="enviar_desc(this)" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  <!--Fin Insertar Descuentos.-->
+  <!--Editar Descuentos.-->
+  <div class="modal fade" id="formulario_editar_descuento" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        </div>
+        <div class="modal-body">
+          <form method=""  class="row g-3" id="form_edit_desc">
+            <div class="col-auto">
+              <input type="hidden"  class="form-control" name="id_descuento" id="id_descuento" value="">
+              <label for="edit_descuento" class="text-center">Descuento</label>
+              <input type="number"  class="form-control" name="edit_descuento" id="edit_descuento" style="border-color: #46f0b7;">
+            </div>
+            <div class="col-auto">
+              <label for="edit_cod_descuento" class="text-center">Código Descuento</label>
+              <input type="text" class="form-control" id="edit_cod_descuento" name="edit_cod_descuento" style="border-color: #46f0b7;">
+            </div>
+            <div class="col-auto">
+              <label for="edit_fecha_termino" class="text-center">Fecha Término Descuento</label>
+              <input type="date"  class="form-control" name="edit_fecha_termino" id="edit_fecha_termino" style="border-color: #46f0b7;">
+            </div>
+            <div class="mb-3">
+              <label for="edit_detalle" class="form-label">Detalles</label>
+              <textarea class="form-control" id="edit_detalle" name="edit_detalle" rows="3" style="border-color: #46f0b7;"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer" style="background: #f1803f; color: rgb(22, 20, 20);">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button onclick="enviar_editar_desc(this)" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  <!--Fin Editar Descuentos.-->
+  <!--Botón para crear Productos.-->
+  <div class="d-grid gap-2 col-6 mx-auto mt-2">
+    <button class="btn" onclick="modalCrearProducto(this)" style="background: #0ff021; color: rgb(22, 20, 20);">Crear Productos</button>
+  </div>
+  <!-- Modal Productos. -->
+  <div class="modal fade" id="create_producto_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #0ff021;">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Ingreso Producto</h1>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table id="producto_datos" class="table table-striped table-bordered dt-responsive nowrap">
+              <button type="button" class="btn btn-sm mb-2" onclick="abrirModalInsertarProducto(this)" style="background: #46f0b7;"><i class="fa-solid fa-circle-plus"></i> Agregar Producto</button>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer" style="background: #0ff021;">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Fin Modal Productos.-->
+  <!--Modal Para Insertar Producto.-->
+  <div class="modal fade" id="insert_producto_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="POST" id="form_productos" enctype="multipart/form-data">
+            {%csrf_token%}
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="nombreProducto" class="col-form-label">Nombre Producto</label>
+              </div>
+              <div class="col-auto">
+                <input type="text" id="nombreProducto" name="nombreProducto" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="cantProdDisponible" class="col-form-label">Cant Prod Disponible</label>
+              </div>
+              <div class="col-auto">
+                <input type="number" id="cantProdDisponible" name="cantProdDisponible" min="0" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="cant_producto_ingresada" class="col-form-label">Cant Prod Ingresada</label>
+              </div>
+              <div class="col-auto">
+                <input type="number" id="cant_producto_ingresada" name="cant_producto_ingresada" min="0" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="precioProd" class="col-form-label">Precio del Producto</label>
+              </div>
+              <div class="col-auto">
+                <input type="number" id="precioProd" name="precioProd" min="0" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="ruta_img_1" class="col-form-label">Img Producto 1</label>
+              </div>
+              <div class="col-auto">
+                <input type="file" id="ruta_img_1" name="ruta_img_1" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="ruta_img_2" class="col-form-label">Img Producto 2</label>
+              </div>
+              <div class="col-auto">
+                <input type="file" id="ruta_img_2" name="ruta_img_2" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="ruta_img_3" class="col-form-label">Img Producto 3</label>
+              </div>
+              <div class="col-auto">
+                <input type="file" id="ruta_img_3" name="ruta_img_3" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="detalle_producto" class="col-form-label">Detalles del Producto</label>
+              </div>
+              <div class="col-auto">
+                <textarea class="form-control" id="detalle_producto" name="detalle_producto" cols="40" rows="10" style="border-color: #36e4be;"></textarea>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button onclick="create_product(this)" style="background: #32a9ce;" class="btn btn-primary">Save changes</button>
+        </div>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  <!--Fin Modal Insertar Producto-->
+  <!------------------------------------------------>
+  <!-- Modal -->
+<div class="modal fade" id="editar_producto_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background: #46f0b7;">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Editar</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="POST" id="form_productos_edit" enctype="multipart/form-data">
+          {%csrf_token%}
+          <input type="hidden" id="id_producto" name="id_producto" value="">
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="editar_Producto" class="col-form-label">Nombre Producto</label>
+              </div>
+              <div class="col-auto">
+                <input type="text" id="editar_Producto" name="editar_Producto" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;" value="">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="editar_cantProdDisponible" class="col-form-label">Cant Prod Disponible</label>
+              </div>
+              <div class="col-auto">
+                <input type="number" id="editar_cantProdDisponible" name="editar_cantProdDisponible" min="0" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="editar_cant_producto_ingresada" class="col-form-label">Cant Prod Ingresada</label>
+              </div>
+              <div class="col-auto">
+                <input type="number" id="editar_cant_producto_ingresada" name="editar_cant_producto_ingresada" min="0" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="editar_precioProd" class="col-form-label">Precio del Producto</label>
+              </div>
+              <div class="col-auto">
+                <input type="number" id="editar_precioProd" name="editar_precioProd" min="0" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="editar_ruta_img_1" class="col-form-label">Img Producto 1</label>
+              </div>
+              <div class="col-auto">
+                <input type="file" id="editar_ruta_img_1" name="editar_ruta_img_1" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="editar_ruta_img_2" class="col-form-label">Img Producto 2</label>
+              </div>
+              <div class="col-auto">
+                <input type="file" id="editar_ruta_img_2" name="editar_ruta_img_2" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="editar_ruta_img_3" class="col-form-label">Img Producto 3</label>
+              </div>
+              <div class="col-auto">
+                <input type="file" id="editar_ruta_img_3" name="editar_ruta_img_3" class="form-control" aria-describedby="passwordHelpInline" style="border-color: #36e4be;">
+              </div>
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-auto">
+                <label for="editar_detalle_producto" class="col-form-label">Detalles del Producto</label>
+              </div>
+              <div class="col-auto">
+                <textarea class="form-control" id="editar_detalle_producto" name="editar_detalle_producto" cols="40" rows="10" style="border-color: #36e4be;"></textarea>
+              </div>
+            </div>
+      </div>
+      <div class="modal-footer" style="background: #46f0b7;">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn" onclick="form_edit_product(this)" style="background: #32a9ce;" class="btn btn-primary">Save changes</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
